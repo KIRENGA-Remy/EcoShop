@@ -1,0 +1,6 @@
+{
+    "watch": ["backend/src/**/*"],
+    "ext": "js,json",
+    "ignore": ["backend/src/uploads/*"],
+    "exec": "node --experimental-specifier-resolution=node backend/src/index.js"
+  }
