@@ -95,17 +95,17 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
                 <span className="text-gray-400">
-                  123 E-Commerce St.<br />
-                  San Francisco, CA 94103
+                  KG 541 Kicukiro St,<br />
+                  Kigali
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-gray-400" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+                <span className="text-gray-400">+250 (079) 244-1050</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-gray-400" />
-                <span className="text-gray-400">support@ecoshop.com</span>
+                <span className="text-gray-400">ecoshop54@gmail.com</span>
               </li>
             </ul>
           </div>

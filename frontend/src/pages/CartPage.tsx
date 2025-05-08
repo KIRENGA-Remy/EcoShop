@@ -78,7 +78,7 @@ const CartPage = () => {
                               {item.name}
                             </Link>
                             <p className="mt-1 text-sm text-gray-500">
-                              ${item.price.toFixed(2)} / each
+                              ${Number(item.price).toFixed(2)} / each
                             </p>
                           </div>
                           <div className="flex items-center mt-4 sm:mt-0">
