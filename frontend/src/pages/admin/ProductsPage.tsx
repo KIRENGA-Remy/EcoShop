@@ -1,26 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { productsApi } from '../../api';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
 import Message from '../../components/ui/Message';
 import { toast } from 'react-toastify';
+import { imageToBase64 } from '../../utility/ImageToBase64';
 
-interface Product{
+interface Product {
     id: string;
     image: string;
     name: string;
     countInStock: number;
     price: number;
-    category: string
+    category: string;
+    description: string;
 }
 
 const ProductsPage = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchProducts();
@@ -30,7 +34,12 @@ const ProductsPage = () => {
     try {
       setLoading(true);
       const { data } = await productsApi.getAll();
-      setProducts(data.products);
+      // Ensure price is converted to number
+      const processedProducts = data.products.map((product: any) => ({
+        ...product,
+        price: Number(product.price) || 0
+      }));
+      setProducts(processedProducts);
       setLoading(false);
     } catch (err) {
       setError('Failed to load products');
@@ -38,21 +47,47 @@ const ProductsPage = () => {
     }
   };
 
-  const handleCreateProduct = async () => {
+  const handleCreateClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     try {
-        const formData = new FormData();
-        formData.append('name', 'Sample Product');
-        formData.append('price', '0');
-        formData.append('image', 'https://via.placeholder.com/300');
-        formData.append('category', 'Sample Category');
-        formData.append('countInStock', '0');
-        formData.append('description', 'Sample description');
-        
-        const { data } = await productsApi.create(formData);
+      setCreateLoading(true);
       
+      const name = prompt('Enter product name:') || 'New Product';
+      const price = prompt('Enter product price:') || '0';
+      const category = prompt('Enter product category:') || 'Uncategorized';
+      const countInStock = prompt('Enter stock count:') || '0';
+      const description = prompt('Enter product description:') || '';
+
+      // Convert image to base64
+      const image = await imageToBase64(file);
+      if (typeof image !== 'string') {
+        throw new Error('Failed to convert image');
+      }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('image', image); 
+    formData.append('category', category);
+    formData.append('countInStock', countInStock);
+    formData.append('description', description);
+
+      const { data } = await productsApi.create(formData);
+      toast.success('Product created successfully');
       navigate(`/admin/product/${data.id}/edit`);
     } catch (err) {
       toast.error('Failed to create product');
+      console.error(err);
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -73,14 +108,30 @@ const ProductsPage = () => {
 
   return (
     <div className="page-transition">
+      
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        accept="image/*"
+        className="hidden"
+      /> 
+      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Products</h1>
         <button
-          onClick={handleCreateProduct}
+          onClick={handleCreateClick}
           className="btn btn-primary flex items-center"
+          disabled={createLoading}
         >
-          <Plus className="h-5 w-5 mr-2" />
-          Create Product
+          {createLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Plus className="h-5 w-5 mr-2" />
+              Create Product
+            </>
+          )}
         </button>
       </div>
 
@@ -100,7 +151,7 @@ const ProductsPage = () => {
                   <th className="table-cell-header">Price</th>
                   <th className="table-cell-header">Category</th>
                   <th className="table-cell-header">In Stock</th>
-                  <th className="table-cell-header"></th>
+                  <th className="table-cell-header">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">

@@ -71,7 +71,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
 
   if (order) {
     // Check if the order belongs to the user or if the user is an admin
-    if (order.UserId === req.user.id || req.user.isAdmin) {
+    if (order.UserId === req.user.id || req.user.is_admin) {
       res.json(order);
     } else {
       res.status(401);

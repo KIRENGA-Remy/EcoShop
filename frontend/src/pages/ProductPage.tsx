@@ -108,7 +108,7 @@ const ProductPage = () => {
             </div>
             
             <div className="text-2xl font-bold mb-4">
-              ${product.price.toFixed(2)}
+              ${Number(product.price).toFixed(2)}
             </div>
             
             <div className="border-t border-b py-4 my-4">

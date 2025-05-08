@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { UserPlus } from 'lucide-react';
 import Loader from '../components/ui/Loader';
 import Message from '../components/ui/Message';
+import axios from 'axios';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -43,8 +44,18 @@ const RegisterPage = () => {
       login(data);
       navigate(redirect);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
-    } finally {
+        if (axios.isAxiosError(err)) {
+          if (err.response) {
+            setError(err.response.data?.message || 'Registration failed');
+          } else if (err.request) {
+            setError('No response from server. Please check your network.');
+          } else {
+            setError('Unexpected error occurred during registration.');
+          }
+        } else {
+          setError('An unknown error occurred.');
+        }
+      } finally {
       setLoading(false);
     }
   };

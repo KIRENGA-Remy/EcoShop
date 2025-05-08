@@ -90,7 +90,7 @@ const Header = () => {
                   >
                     Orders
                   </Link>
-                  {user.isAdmin && (
+                  {user.is_admin && (
                     <Link
                       to="/admin/dashboard"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -162,7 +162,7 @@ const Header = () => {
                     <ShoppingCart className="h-5 w-5" />
                     <span>Orders</span>
                   </Link>
-                  {user.isAdmin && (
+                  {user.is_admin && (
                     <Link to="/admin/dashboard" className="flex items-center space-x-2">
                       <User className="h-5 w-5" />
                       <span>Admin Dashboard</span>

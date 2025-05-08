@@ -44,7 +44,7 @@ const Message: React.FC<MessageProps> = ({ variant = 'info', children }) => {
 
   return (
     <div
-      className={`${styles.bg} ${styles.border} ${styles.text} border-l-4 p-4 rounded-md mb-4`}
+      className={`${styles.bg} ${styles.border} ${styles.text} border-l-2 p-4 rounded-md mb-4`}
     >
       <div className="flex">
         <div className="flex-shrink-0">{styles.icon}</div>

@@ -9,12 +9,31 @@ dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Initialize BitPay client
-const bitpay = new Client(
-  process.env.BITPAY_TOKEN,
-  {
-    environment: process.env.BITPAY_ENV === 'production' ? 'prod' : 'test'
-  }
-);
+// const bitpay = new Client(
+//   process.env.BITPAY_TOKEN,
+//   process.env.BITPAY_CONFIG_PATH || './bitpay.config.json', 
+//   openssl ecparam -name secp256k1 -genkey -noout -out private_key_test.key,
+//   {
+//     environment: process.env.BITPAY_ENV === 'production' ? 'prod' : 'test'
+//   }
+// );
+
+let bitpay;
+try {
+  bitpay = new Client(
+    process.env.BITPAY_CONFIG_PTH || '../config/bitpay.config.json',
+    {
+      privateKey: process.env.BITPAY_PRIVATE_KE || '../config/ private_key_test.key',
+      tokens: {
+        merchant: process.env.BITPAY_MERCHANT_TOKEN,
+        payout: process.env.BITPAY_PAYOUT_TOKEN
+      },
+      environment: process.env.BITPAY_ENV || 'test'
+    }
+  );
+} catch (error) {
+  console.error('BitPay initialization failed:', error.message);
+}
 
 // @desc    Process Stripe payment
 // @route   POST /api/payments/stripe

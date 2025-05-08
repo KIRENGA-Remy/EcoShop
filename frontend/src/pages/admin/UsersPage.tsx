@@ -10,7 +10,7 @@ interface User {
     id: string;
     username: string;
     email: string;
-    isAdmin: boolean
+    is_admin: boolean
   }
 
 const UsersPage = () => {
@@ -96,7 +96,7 @@ const UsersPage = () => {
                     </td>
                     <td className="table-cell">{user?.email}</td>
                     <td className="table-cell">
-                      {user?.isAdmin ? (
+                      {user?.is_admin ? (
                         <CheckCircle className="h-5 w-5 text-emerald-500" />
                       ) : (
                         <div className="h-5 w-5"></div>

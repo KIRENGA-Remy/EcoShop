@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.description}
         </p>
         <div className="flex justify-between items-center">
-          <span className="font-bold text-lg">${product.price.toFixed(2)}</span>
+          <span className="font-bold text-lg">${Number(product.price).toFixed(2)}</span>
           <button
             onClick={handleAddToCart}
             disabled={product.countInStock === 0}

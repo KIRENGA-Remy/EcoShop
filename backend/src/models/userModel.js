@@ -1,32 +1,41 @@
 import { DataTypes } from 'sequelize';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import sequelize from '../config/db.js';
 
 const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      notEmpty: true
+    }
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true
+      isEmail: true,
+      notEmpty: true
     }
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [6, 128] // Minimum 6 characters
+    }
   },
-  isAdmin: {
+  is_admin: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   }
 }, {
-  timestamps: true,
+  tableName: 'users', // Explicit table name
+  timestamps: true,   // Adds createdAt and updatedAt
   hooks: {
     beforeCreate: async (user) => {
       if (user.password) {
@@ -43,9 +52,26 @@ const User = sequelize.define('User', {
   }
 });
 
-// Method to check if password matches
+// Instance method to compare passwords
 User.prototype.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Class method to find by credentials
+User.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ where: { email } });
+  
+  if (!user) {
+    throw new Error('Invalid email or password');
+  }
+  
+  const isMatch = await user.matchPassword(password);
+  
+  if (!isMatch) {
+    throw new Error('Invalid email or password');
+  }
+  
+  return user;
 };
 
 export default User;

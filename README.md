@@ -80,6 +80,7 @@ npm install
 Create .env file:
 
 env
+
 DB_NAME=your_db_name
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
@@ -102,7 +103,8 @@ npm install
 Create .env file:
 
 env
-VITE_API_BASE_URL=http://localhost:5000/api
+
+VITE_API_BASE_URL=http://localhost:4321/api
 VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
 VITE_BTC_PAYMENT_ID=your_bitcoin_payment_id
 Start the development server:

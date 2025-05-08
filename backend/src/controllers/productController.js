@@ -2,6 +2,25 @@ import asyncHandler from 'express-async-handler';
 import { Op } from 'sequelize';
 import Product from '../models/productModel.js';
 
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
+export const createProduct = asyncHandler(async (req, res) => {
+    const { name, price, description, image, category, countInStock } = req.body;
+  // console.log(" naming", name," pricing", price,"descr", description,"imag", image," catego", category," count is stock", countInStock);
+  
+    const product = await Product.create({
+      name,
+      price,
+      description,
+      image,
+      category, 
+      countInStock
+    });
+  
+    res.status(201).json(product);
+  });
+  
 // @desc    Fetch all products with pagination and search
 // @route   GET /api/products
 // @access  Public
@@ -54,24 +73,6 @@ export const getProductById = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Product not found');
   }
-});
-
-// @desc    Create a product
-// @route   POST /api/products
-// @access  Private/Admin
-export const createProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, category, countInStock } = req.body;
-
-  const product = await Product.create({
-    name,
-    price,
-    description,
-    image,
-    category, 
-    countInStock
-  });
-
-  res.status(201).json(product);
 });
 
 // @desc    Update a product

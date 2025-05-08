@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { productsApi } from '../../api';
 import { ArrowLeft, Save } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
 import Message from '../../components/ui/Message';
 import { toast } from 'react-toastify';
+import { imageToBase64 } from '../../utility/ImageToBase64';
 
 const ProductEditPage = () => {
   const { id } = useParams();
@@ -12,10 +13,10 @@ const ProductEditPage = () => {
   
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState<string>('');
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState<string>('');
   
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -46,6 +47,20 @@ const ProductEditPage = () => {
       fetchProduct();
     }
   }, [id]);
+  
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if(file){
+      const base64 = await imageToBase64(file)
+      if( typeof base64 === 'string'){
+        setImage(base64);
+      } else {
+        console.error('Error converting image base64 string')
+      }
+    } else {
+      console.error("No image found");
+    }
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -166,11 +181,15 @@ const ProductEditPage = () => {
                 Image URL
               </label>
               <input
-                type="text"
+                type={"file"}
                 id="image"
-                className="form-input"
+                name="image"
+                accept='image/*'
+                // className="form-input"
                 value={image}
-                onChange={(e) => setImage(e.target.value)}
+                // onChange={(e) => setImage(e.target.value)} 
+                onChange={handleImageUpload}
+                className='p-1 rounded-sm focus:border-blue-500 border border-[#0c0f32] bg-[#0414c6] indent-3 text-white'
                 required
               />
             </div>

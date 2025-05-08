@@ -8,15 +8,12 @@ import generateToken from '../utils/generateToken.js';
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Check if user already exists
   const userExists = await User.findOne({ where: { email } });
-
   if (userExists) {
     res.status(400);
     throw new Error('User already exists');
   }
 
-  // Create new user
   const user = await User.create({
     username,
     email,
@@ -28,7 +25,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin,
+      is_admin: user.is_admin,
       token: generateToken(user.id)
     });
   } else {
@@ -52,7 +49,7 @@ export const authUser = asyncHandler(async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin,
+      is_admin: user.is_admin,
       token: generateToken(user.id)
     });
   } else {
@@ -72,7 +69,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin
+      is_admin: user.is_admin
     });
   } else {
     res.status(404);
@@ -100,7 +97,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       id: updatedUser.id,
       username: updatedUser.username,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
+      is_admin: updatedUser.is_admin,
       token: generateToken(updatedUser.id)
     });
   } else {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { userApi, orderApi, productsApi } from '../../api';
-import { Users, Package, ShoppingBag, DollarSign } from 'lucide-react';
+import { Users, Package, ShoppingBag, DollarSign, Plus } from 'lucide-react';
 import Loader from '../../components/ui/Loader';
 import Message from '../../components/ui/Message';
 
@@ -109,8 +109,16 @@ const DashboardPage = () => {
 
   return (
     <div className="page-transition">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-      
+      <div className='flex justify-between mb-6'>
+      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      <Link
+      to={'/admin/products/create'}
+      className='flex space-x-3 bg-indigo-600 hover:bg-indigo-700 rounded-sm px-4 py-2 text-white font-bold items-center'
+      >
+      <Plus className='h-6 w-6'/>
+      Create a product
+      </Link>
+      </div>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -264,7 +272,10 @@ const DashboardPage = () => {
                         </div>
                       </td>
                       <td className="table-cell font-medium">
-                        ${product.price.toFixed(2)}
+                        {/* ${product.price.toFixed(2)} */}
+                        { typeof product.price === "number" ? 
+                        `${product.price.toFixed(2)}` :
+                         `${parseFloat(product.price).toFixed(2)}` }
                       </td>
                       <td className="table-cell">
                         {product.category}
