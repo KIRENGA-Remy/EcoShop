@@ -14,8 +14,6 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4321;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
@@ -34,36 +32,23 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payments', paymentRoutes);
 
-// Health check endpoint (required for Render)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// Production client serving
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
-  });
-} else {
-  app.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.send('API is running...');
-  });
-}
+});
 
-// Error handling
+
 app.use(notFound);
 app.use(errorHandler);
 
-// Database connection and server start
 connectDB()
   .then(() => {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`
-        Server running in ${process.env.NODE_ENV || 'development'} mode
+        Server running in ${process.env.NODE_ENV || 'production'} mode
         Listening on port ${PORT}
         Database connected
       `);
@@ -73,4 +58,3 @@ connectDB()
     console.error('Server initialization failed:', err);
     process.exit(1);
   });
-  
