@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, User, LogOut, Menu, X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
+import  loggo  from '../../assets/loggo.png'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <ShoppingCart className="h-7 w-7" />
+            <img src={loggo} width={64} height={64} className='font-bold text-2xl' />
             <span className="text-xl font-bold">EcoShop</span>
           </Link>
 

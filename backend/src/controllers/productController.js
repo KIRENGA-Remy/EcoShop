@@ -7,7 +7,6 @@ import Product from '../models/productModel.js';
 // @access  Private/Admin
 export const createProduct = asyncHandler(async (req, res) => {
     const { name, price, description, image, category, countInStock } = req.body;
-  // console.log(" naming", name," pricing", price,"descr", description,"imag", image," catego", category," count is stock", countInStock);
   
     const product = await Product.create({
       name,
