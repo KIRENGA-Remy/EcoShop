@@ -20,8 +20,8 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-render-app.onrender.com', 'https://your-frontend.com']
-    : 'http://localhost:5173',
+    ? [process.env.SERVER_URL, process.env.FRONTEND_URL]
+    : 'https://ecoshop-kappa.vercel.app',
   methods: ['POST', 'GET', 'PUT', 'DELETE'],
   credentials: true
 }));
